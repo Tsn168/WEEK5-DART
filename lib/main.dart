@@ -250,10 +250,56 @@
 // exercise 4
 import 'package:flutter/material.dart';
 
-enum TypeWeather { sunny, cloudy, sunnyCloudy, veryCloudy }
+enum TypeWeather {
+  sunny(
+    location: "Rome",
+    imagePath: "assets/ex4/sunny.png",
+    minTemp: "Min 10.0°C",
+    maxTemp: "Max 40.0°C",
+    temp: "45.2°C",
+    gradientColor: LinearGradient(colors: [Colors.redAccent, Colors.red]),
+  ),
+  cloudy(
+    location: "Phnom Penh",
+    imagePath: "assets/ex4/cloudy.png",
+    minTemp: "Min 10.0°C",
+    maxTemp: "Max 30.0°C",
+    temp: "12.2°C",
+    gradientColor: LinearGradient(colors: [Colors.purpleAccent, Colors.purple]),
+  ),
 
-void main() {
-  runApp(MyApp());
+  sunnyCloudy(
+    location: "Paris",
+    imagePath: "assets/ex4/sunnyCloudy.png",
+    minTemp: "Min 10.0°C",
+    maxTemp: "Max 40.0°C",
+    temp: "22.2°C",
+    gradientColor: LinearGradient(colors: [Colors.greenAccent, Colors.green]),
+  ),
+
+  veryCloudy(
+    location: "Toulouse",
+    imagePath: "assets/ex4/veryCloudy.png",
+    minTemp: "Min 10.0°C",
+    maxTemp: "Max 40.0°C",
+    temp: "",
+    gradientColor: LinearGradient(colors: [Colors.orange, Colors.orangeAccent]),
+  );
+
+  final String minTemp;
+  final String maxTemp;
+  final String imagePath;
+  final String location;
+  final String temp;
+  final Gradient gradientColor;
+  const TypeWeather({
+    required this.location,
+    required this.minTemp,
+    required this.maxTemp,
+    required this.imagePath,
+    required this.temp,
+    required this.gradientColor,
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -294,83 +340,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
+void main() {
+  runApp(MyApp());
+}
+
 class WeatherCard extends StatelessWidget {
   final TypeWeather typeWeather;
+
   const WeatherCard({super.key, required this.typeWeather});
-
-  Gradient get gradient {
-    switch (typeWeather) {
-      case TypeWeather.cloudy:
-        return const LinearGradient(
-          colors: [Colors.purpleAccent, Colors.purple],
-        );
-      case TypeWeather.sunnyCloudy:
-        return const LinearGradient(colors: [Colors.greenAccent, Colors.green]);
-      case TypeWeather.sunny:
-        return const LinearGradient(colors: [Colors.redAccent, Colors.red]);
-      case TypeWeather.veryCloudy:
-        return const LinearGradient(
-          colors: [Colors.orange, Colors.orangeAccent],
-        );
-    }
-  }
-
-  String get image {
-    switch (typeWeather) {
-      case TypeWeather.cloudy:
-        return "assets/ex4/cloudy.png";
-      case TypeWeather.sunnyCloudy:
-        return "assets/ex4/sunnyCloudy.png";
-      case TypeWeather.sunny:
-        return "assets/ex4/sunny.png";
-      case TypeWeather.veryCloudy:
-        return "assets/ex4/veryCloudy.png";
-    }
-  }
-
-  String get location {
-    switch (typeWeather) {
-      case TypeWeather.cloudy:
-        return "Phnom Penh";
-      case TypeWeather.sunnyCloudy:
-        return "Paris";
-      case TypeWeather.sunny:
-        return "Rome";
-      case TypeWeather.veryCloudy:
-        return "Toulouse";
-    }
-  }
-
-  String get minTemp {
-    return "Min 10.0°C";
-  }
-
-  String get maxTemp {
-    if (typeWeather == TypeWeather.cloudy) {
-      return "Max 30.0°C";
-    }
-    return "Max 40.0°C";
-  }
-
-  String get temp {
-    switch (typeWeather) {
-      case TypeWeather.cloudy:
-        return "12.2°C";
-      case TypeWeather.sunnyCloudy:
-        return "22.2°C";
-      case TypeWeather.sunny:
-        return "45.2°C";
-      case TypeWeather.veryCloudy:
-        return "45.2°C";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return PhysicalModel(
       color: Colors.white,
       elevation: 10,
-      shadowColor: Colors.black.withOpacity(0.7),
+      shadowColor: Colors.black.withOpacity(0.5),
       borderRadius: BorderRadius.circular(25),
       clipBehavior: Clip.antiAlias,
       child: Stack(
@@ -379,7 +362,9 @@ class WeatherCard extends StatelessWidget {
             height: 120,
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              gradient: gradient,
+              // gradient: gradient,
+              // TypeWeather.cloudy.gradientColor,
+              gradient: typeWeather.gradientColor,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -387,14 +372,17 @@ class WeatherCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
-                  child: CircleAvatar(backgroundImage: AssetImage(image)),
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(typeWeather.imagePath),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      location,
+                      // TypeWeather.cloudy.location,
+                      typeWeather.location,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -403,11 +391,14 @@ class WeatherCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      minTemp,
+                      // minTemp,
+                      // TypeWeather.cloudy.minTemp,
+                      typeWeather.minTemp,
                       style: TextStyle(color: Colors.grey[300], fontSize: 11),
                     ),
                     Text(
-                      maxTemp,
+                      // maxTemp,
+                      TypeWeather.cloudy.maxTemp,
                       style: TextStyle(color: Colors.grey[300], fontSize: 11),
                     ),
                   ],
@@ -422,7 +413,7 @@ class WeatherCard extends StatelessWidget {
               width: 200,
               height: 200,
               decoration: BoxDecoration(
-                gradient: gradient,
+                gradient: typeWeather.gradientColor,
                 shape: BoxShape.circle,
               ),
             ),
@@ -431,7 +422,7 @@ class WeatherCard extends StatelessWidget {
             right: 15,
             top: 35,
             child: Text(
-              temp,
+              typeWeather.temp,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 22,
