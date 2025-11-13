@@ -282,7 +282,7 @@ enum TypeWeather {
     imagePath: "assets/ex4/veryCloudy.png",
     minTemp: "Min 10.0°C",
     maxTemp: "Max 40.0°C",
-    temp: "",
+    temp: "45.2°C",
     gradientColor: LinearGradient(colors: [Colors.orange, Colors.orangeAccent]),
   );
 
